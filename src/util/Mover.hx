@@ -6,8 +6,9 @@ class Mover
 	public var velocity:PVector;
 	public var acceleration:PVector;
 	public var topspeed:Float;
+	public var mass:Float;
 	
-	public function new(?location:PVector, ?velocity:PVector, ?acceleration:PVector,?topspeed:Float) 
+	public function new(?location:PVector, ?velocity:PVector, ?acceleration:PVector,?mass:Float,?topspeed:Float) 
 	{
 		if (location == null) 
 		{
@@ -30,6 +31,13 @@ class Mover
 		{
 			this.acceleration = acceleration;
 		}
+		if (mass == null) 
+		{
+			this.mass = 10;
+		}else 
+		{
+			this.mass = mass;
+		}
 		if (topspeed == null) 
 		{
 			this.topspeed = 20;
@@ -47,7 +55,8 @@ class Mover
 		*/
 		velocity.add(acceleration);
 		velocity.limit(topspeed);
-		location.add(velocity);		
+		location.add(velocity);
+		acceleration.mult(0);
 	}
 	
 	public function checkEdges(width:Float, height:Float):Void
@@ -90,7 +99,14 @@ class Mover
 		{
 			var direction:PVector = PVector.subtraction(mousePosition, location);
 			direction.normalize();
-			acceleration = direction.mult(0.2);
+			//acceleration = direction.mult(0.2);
+			applyForce(direction.mult(0.2));
 		}		
-	}	
+	}
+	
+	public function applyForce(force:PVector)
+	{
+		force = PVector.division(force, mass);
+		acceleration.add(force);
+	}
 }

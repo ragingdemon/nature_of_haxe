@@ -14,12 +14,16 @@ import openfl.events.MouseEvent;
 
 class Main extends Sprite 
 {
+	var halfWith:Float;
+	var halfHeight:Float;
 	var inited:Bool;
 	var previosTime:Int;
 	var elapsed:Float;
 	var walker:Walker;
 	var mover:Mover;
 	var mousePosition:PVector;
+	var windForce:PVector;
+	var windMouse:PVector;
 
 	/* ENTRY POINT */
 	
@@ -34,11 +38,15 @@ class Main extends Sprite
 		if (inited) return;
 		inited = true;
 
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouse_move);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouse_move);		
 		previosTime = Lib.getTimer();
-		walker = new Walker(stage.stageWidth / 2, stage.stageHeight / 2, 8);
-		mover = new Mover(new PVector(stage.stageWidth / 2, stage.stageHeight / 2));				
-	}
+		halfWith = stage.stageWidth / 2;
+		halfHeight = stage.stageHeight / 2;
+		
+		mover = new Mover(new PVector(halfWith, halfHeight));
+		windForce = new PVector(0.01, 0);
+		windMouse = new PVector( -0.2, 0);
+	}	
 
 	/* SETUP */
 
@@ -70,63 +78,35 @@ class Main extends Sprite
 	public function loop(e:Event):Void 
 	{		
 		deltaTime();
-		//draw();
-		//walker.step();
-		//drawGaussian();
-		drawMover();
-		
-	}
-	
-	public function draw():Void 
-	{
-		graphics.clear();
-		graphics.beginFill(0x008040);
-		graphics.drawCircle(walker.x, walker.y,walker.r);
-		graphics.endFill();
-	}
-	
-	public function drawGaussian():Void 
-	{		
-		var gaussian:Float = Gaussian.getGaussian(stage.stageWidth / 2, 60);
-		graphics.beginFill(0x008040,0.25);
-		graphics.drawCircle(gaussian,stage.stageHeight / 2, 16);
-		graphics.endFill();
-	}
-	
-	public function drawPerlin():Void 
-	{
-		var noise:Noise = new Noise(stage.stageWidth,stage.stageHeight);
-		for (i in 0...stage.stageWidth) 
-		{
-			for (j in 0...stage.stageHeight) 
-			{
-				drawRectangel(i, j, noise.gridNoise[i][j]);
-			}
-		}
-	}
-	
-	public function drawRectangel(x:Float, y:Float, alpha:Float):Void 
-	{				
-		graphics.beginFill(0x000000, alpha);		
-		graphics.drawRect(x, y, 1, 1);
-		graphics.endFill();
+		drawMover();		
 	}
 	
 	public function drawMover():Void
-	{		
+	{
+		stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouse_down);
+		
 		graphics.clear();
 		graphics.beginFill(0x008040,0.25);
 		graphics.drawCircle(mover.location.x,mover.location.y,16);
 		graphics.endFill();
-		mover.setAcceleration(mousePosition);
+		//mover.setAcceleration(mousePosition);
+		mover.applyForce(windForce);
 		mover.update();
 		mover.checkEdges(stage.stageWidth, stage.stageHeight);
-		//mover.teleportation(stage.stageWidth, stage.stageHeight,16);
+		//mover.teleportation(stage.stageWidth, stage.stageHeight,16);		
 	}
 	
-	public function onMouse_move(event:MouseEvent)
-	{		
+	private function onMouse_move(event:MouseEvent)
+	{				
 		mousePosition = new PVector(event.localX, event.localY);		
+	}
+	
+	private function onMouse_down(event:MouseEvent):Void 
+	{		
+		trace("get in mouse event");
+		mover.applyForce(windMouse);
+		trace("acceleration of mover:" + mover.acceleration);
+		stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouse_down);
 	}
 	
 	public static function main() 
