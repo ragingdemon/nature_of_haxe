@@ -79,7 +79,7 @@ class PVector
 		var magnitud:Float = v.mag();
 		if (magnitud > 0) 
 		{
-			return v.div(magnitud);
+			return division(v,magnitud);
 		}
 		return null;
 	}
@@ -116,6 +116,6 @@ class PVector
 	
 	public function toString():String
 	{
-		return "vector" + "[" + x + "]" + "[" + y + "]";
+		return "[" + x + "," + y + "]";
 	}
 }
