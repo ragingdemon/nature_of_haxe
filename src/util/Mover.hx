@@ -43,17 +43,44 @@ class Mover
 		//velocity.limit(topspeed);
 		location.add(velocity);
 		if (sprite != null) 
-		{			
-			
+		{						
 			sprite.x = location.x;
 			sprite.y = location.y;
 			sprite.rotation = angle;
 		}
 		
 		aVelocity += aAcceleration;
-		angle += aVelocity;		
-		
+		if (aVelocity < -1) 
+		{
+			aVelocity = -1;
+		}else if (aVelocity > 1) 
+		{
+			aVelocity = 1;
+		}
+		//angle += aVelocity;
+		angle = velocity.heading();
+		//trace('velocity = $velocity, angle = $angle');
 		acceleration.mult(0);
+	}
+	
+	public function updatePolar()
+	{		
+		if (sprite != null) 
+		{						
+			sprite.x = location.x;
+			sprite.y = location.y;
+			sprite.rotation = angle;
+		}
+		aVelocity += aAcceleration;
+		if (aVelocity < -1) 
+		{
+			aVelocity = -1;
+		}else if (aVelocity > 1) 
+		{
+			aVelocity = 1;
+		}
+		angle += aVelocity;
+		acceleration.mult(0);		
 	}
 	
 	public function checkEdges(width:Float, height:Float):Void
@@ -141,6 +168,7 @@ class Mover
 			applyForce(drag);
 		}
 	}
+		
 	/*
 	public function toString():String
 	{

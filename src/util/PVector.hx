@@ -5,7 +5,7 @@ class PVector
 	public var x:Float;
 	public var y:Float;
 	
-	public function new(x:Float, y:Float ) 
+	public function new(x:Float = 0, y:Float = 0) 
 	{
 		this.x = x;
 		this.y = y;
@@ -112,6 +112,36 @@ class PVector
 			v.y *= -1;
 		}
 		return v;
+	}
+	
+	public function heading():Float
+	{
+		if (x == 0)
+		{
+			if (y == 0) 
+			{
+				return 0;
+			}else if (y > 0)
+			{
+				return 180;
+			}else if (y < 0)
+			{
+				return 0;
+			}
+		}else if (y == 0) 
+		{
+			if (x == 0) 
+			{
+				return 0;
+			}else if (x > 0)
+			{
+				return 90;
+			}else if (x < 0)
+			{
+				return -90;
+			}
+		}
+		return return Math.atan2(y, x) * 57.2957795;
 	}
 	
 	public function toString():String

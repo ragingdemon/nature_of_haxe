@@ -46,7 +46,7 @@ class Main extends Sprite
 		halfWith = stage.stageWidth / 2;
 		halfHeight = stage.stageHeight / 2;
 		
-		movers = [for (i in 0...5) new Mover(Math.random() * stage.stageWidth, 10, Math.random() * 20)];	
+		movers = [for (i in 0...1) new Mover(Math.random() * stage.stageWidth, 10, Math.random() * 20)];	
 		//movers = [for (i in 0...1) new Mover( halfWith-halfWith/4, halfHeight - 5, 1)];
 		windForce = new PVector(0.01, 0);
 		gravity = new PVector(0, 0.1);
@@ -144,8 +144,7 @@ class Main extends Sprite
 			mover.update();
 			//mover.checkEdges(stage.stageWidth, stage.stageHeight);
 			//mover.teleportation(stage.stageWidth, stage.stageHeight,10);
-		}	
-		;
+		}			
 	}
 	
 	public static function main() 
